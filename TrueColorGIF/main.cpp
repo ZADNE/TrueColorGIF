@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
     if (inFilename.extension() == ".png") {
         //Decode the PNG
         auto error = lodepng::decode(
-            bitmap.pixels, bitmap.w, bitmap.h,
+            bitmap.pixels, bitmap.width, bitmap.height,
             inFilename.string(),
             LodePNGColorType::LCT_RGB, 8u
         );

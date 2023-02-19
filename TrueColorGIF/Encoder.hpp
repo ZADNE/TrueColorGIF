@@ -11,8 +11,8 @@ namespace TrueColorGIF {
  * @brief Is POD for decoded RGB, 8-bits-per-channel image
 */
 struct Bitmap {
-    unsigned int w;
-    unsigned int h;
+    unsigned int width;
+    unsigned int height;
     std::vector<uint8_t> pixels;
 };
 
