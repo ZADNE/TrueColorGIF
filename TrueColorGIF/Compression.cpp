@@ -50,28 +50,28 @@ private:
 
 void compressWithLZW(
     std::vector<uint8_t>& output,
-    unsigned int initialCodeSize,
+    unsigned int dataCodeSize,
     const std::vector<uint8_t>& input
 ) {
     output.clear();
-    const Code clearCode{initialCodeSize + 1, 1u << initialCodeSize};
+    const Code clearCode{dataCodeSize + 1, 1u << dataCodeSize};
     CodeSerializer o{output};
 
     o.write(clearCode);
     size_t i;
-    size_t clearInterval = std::max((1ull << initialCodeSize) - 2, 1ull);
+    size_t clearInterval = std::max((1ull << dataCodeSize) - 2, 1ull);
     for (i = 0; i < (input.size() % clearInterval); i++) {
-        o.write(Code{initialCodeSize + 1, input[i]});
+        o.write(Code{dataCodeSize + 1, input[i]});
     }
 
     for (; i < input.size(); i += clearInterval) {
         o.write(clearCode);
         for (size_t j = 0; j < clearInterval; j++) {
-            o.write(Code{initialCodeSize + 1, input[i + j]});
+            o.write(Code{dataCodeSize + 1, input[i + j]});
         }
     }
 
-    o.write(Code{initialCodeSize + 1, clearCode.data + 1}); //Stop code
+    o.write(Code{dataCodeSize + 1, clearCode.data + 1}); //Stop code
 }
 
 }

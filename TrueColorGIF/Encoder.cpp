@@ -6,9 +6,6 @@
 #include <TrueColorGIF/Compression.hpp>
 #include <TrueColorGIF/Palette.hpp>
 
-#include <format>
-#include <iostream>
-
 namespace TrueColorGIF {
 
 void encodeImage(
@@ -62,19 +59,20 @@ void encodeImage(
     const Palette& p,
     std::vector<uint8_t>& s
 ) {
-    std::cout << std::format(
-        "{}{:3} {:3} {:3} {:3} {:3} |",
-        (start.x == 0 ? '\n' : ' '),
-        start.x, start.y, extent.x, extent.y,
-        p.colors.size() / 3
-    );
-
-
     //Determine size of the local color table
     size_t tableSize =
         std::max(std::bit_ceil<size_t>(p.colors.size() / 3ull), 2ull);
     unsigned int indexBits = std::countr_zero(tableSize) - 1;
     unsigned int flags = 0b1'0'0'00'000 | indexBits;
+
+    //Graphic control extension
+    o << '!';                                   //Extension introducer
+    writeLittle<uint8_t>(o, 0xF9);              //Graphic control label
+    writeLittle<uint8_t>(o, 4);                 //Block size
+    writeLittle<uint8_t>(o, 0b000'001'0'0);     //Keep the image, no tranparent color
+    writeLittle<uint16_t>(o, 2);                //No delay
+    writeLittle<uint8_t>(o, 0);                 //Unused transparent color index
+    o << '\0';                                  //Image data block terminator
 
     //Image descriptor
     o << ',';                                   //Image separator
