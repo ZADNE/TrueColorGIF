@@ -70,7 +70,7 @@ void encodeImage(
     writeLittle<uint8_t>(o, 0xF9);              //Graphic control label
     writeLittle<uint8_t>(o, 4);                 //Block size
     writeLittle<uint8_t>(o, 0b000'001'0'0);     //Keep the image, no tranparent color
-    writeLittle<uint16_t>(o, 2);                //No delay
+    writeLittle<uint16_t>(o, 2);                //20 ms delay - apparently minimum delay in web browsers 
     writeLittle<uint8_t>(o, 0);                 //Unused transparent color index
     o << '\0';                                  //Image data block terminator
 
