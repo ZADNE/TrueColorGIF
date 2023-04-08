@@ -9,15 +9,6 @@
 
 namespace TrueColorGIF {
 
-struct Vec2D {
-    Vec2D(unsigned int x_, unsigned int y_): x(x_), y(y_) {}
-
-    auto operator<=>(const Vec2D&) const = default;
-
-    unsigned int x;
-    unsigned int y;
-};
-
 struct Palette {
     Palette() {
         colors.reserve(256ull * 3);     //Upper bound

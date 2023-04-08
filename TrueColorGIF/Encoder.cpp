@@ -12,10 +12,11 @@ void encodeImage(
     std::ofstream& o,
     const Vec2D& start, const Vec2D& size,
     const Palette& palette,
-    std::vector<uint8_t>& s
+    std::vector<uint8_t>& s,
+    const ImageCallback& callback
 );
 
-void encodeTrueColorGIF(std::ofstream& o, const Bitmap& bitmap) {
+void encodeTrueColorGIF(std::ofstream& o, const Bitmap& bitmap, const ImageCallback& callback) {
     o << "GIF89a";                              //Header
     writeLittle<uint16_t>(o, bitmap.width);     //Screen width
     writeLittle<uint16_t>(o, bitmap.height);    //Screen height
@@ -32,7 +33,7 @@ void encodeTrueColorGIF(std::ofstream& o, const Bitmap& bitmap) {
         if (cursor.x == 0u) {
             //Try to cover full rows
             auto covered = constructPaletteFromRows(bitmap, cursor.y, p);
-            encodeImage(o, cursor, covered, p, s);
+            encodeImage(o, cursor, covered, p, s, callback);
             if (covered.x == bitmap.width) {//Covered full rows
                 cursor.y += covered.y;
             } else {//Could not cover full row
@@ -41,7 +42,7 @@ void encodeTrueColorGIF(std::ofstream& o, const Bitmap& bitmap) {
         } else {
             //Try to finish the remainder of this row
             auto covered = constructPaletteFromRowRemainder(bitmap, cursor, p);
-            encodeImage(o, cursor, Vec2D{covered, 1u}, p, s);
+            encodeImage(o, cursor, Vec2D{covered, 1u}, p, s, callback);
             cursor.x += covered;
             if (cursor.x == bitmap.width) {
                 //Finished this row
@@ -57,7 +58,8 @@ void encodeImage(
     std::ofstream& o,
     const Vec2D& start, const Vec2D& extent,
     const Palette& p,
-    std::vector<uint8_t>& s
+    std::vector<uint8_t>& s,
+    const ImageCallback& callback
 ) {
     //Determine size of the local color table
     size_t tableSize =
@@ -104,6 +106,10 @@ void encodeImage(
     }
 
     o << '\0';                                  //Image data block terminator
+
+    if (callback) {
+        (callback)(start, extent);
+    }
 }
 
 }

@@ -4,6 +4,7 @@
 #pragma once
 #include <vector>
 #include <fstream>
+#include <functional>
 
 namespace TrueColorGIF {
 
@@ -26,7 +27,11 @@ struct ColorHasher {
 struct Bitmap {
 
     const Color& color(unsigned int x, unsigned int y) const {
-        return *reinterpret_cast<const Color*>(&pixels[(y * width + x) * 3ll]);
+        return *reinterpret_cast<const Color*>(&pixels[(y * width + x) * 3u]);
+    }
+
+    Color& color(unsigned int x, unsigned int y) {
+        return *reinterpret_cast<Color*>(&pixels[(y * width + x) * 3u]);
     }
 
     unsigned int width = 0u;
@@ -34,9 +39,20 @@ struct Bitmap {
     std::vector<uint8_t> pixels;
 };
 
+struct Vec2D {
+    Vec2D(unsigned int x_, unsigned int y_): x(x_), y(y_) {}
+
+    auto operator<=>(const Vec2D&) const = default;
+
+    unsigned int x;
+    unsigned int y;
+};
+
+using ImageCallback = std::function<void(const Vec2D& offset, const Vec2D& size)>;
+
 /**
  * @brief Encodes bitmap to true-color GIF
 */
-void encodeTrueColorGIF(std::ofstream& o, const Bitmap& bitmap);
+void encodeTrueColorGIF(std::ofstream& o, const Bitmap& bitmap, const ImageCallback& callback);
 
 }

@@ -18,7 +18,7 @@ unsigned int addRowToPalette(
             p.indices.push_back(it->second);
         } else if (p.colorToIndexTable.size() <= 255) {
             //Insert new color into the palette
-            unsigned int index = p.colorToIndexTable.size();
+            auto index = static_cast<unsigned int>(p.colorToIndexTable.size());
             p.colorToIndexTable.emplace_hint(it, std::make_pair(col, index));
             p.colors.push_back(col.r);
             p.colors.push_back(col.g);
