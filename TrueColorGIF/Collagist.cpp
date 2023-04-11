@@ -5,6 +5,8 @@
 
 #include <lodepng/lodepng.hpp>
 
+#include <iostream>
+
 namespace TrueColorGIF {
 
 uint32_t xorshift(uint32_t x) {
@@ -16,7 +18,7 @@ uint32_t xorshift(uint32_t x) {
 
 Collagist::Collagist(const Bitmap& bitmap):
     m_collage(bitmap),
-    m_rng(1984258863){
+    m_rng(1984258863) {
 }
 
 void Collagist::addImage(const Vec2D& offset, const Vec2D& size) {
@@ -32,9 +34,11 @@ void Collagist::addImage(const Vec2D& offset, const Vec2D& size) {
             m_collage.color(x, y) = c;
         }
     }
+    m_imageCount++;
 }
 
 unsigned int Collagist::saveCollage(const std::string& filename) {
+    std::cout << "Total subimage count: " << m_imageCount << '\n';
     return lodepng::encode(
         filename, m_collage.pixels.data(),
         m_collage.width, m_collage.height,

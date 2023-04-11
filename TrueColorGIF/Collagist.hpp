@@ -18,7 +18,8 @@ public:
 
 private:
     Bitmap m_collage;
-    uint32_t m_rng = 0;
+    uint32_t m_rng = 0u;
+    unsigned int m_imageCount = 0u;
 };
 
 }
