@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <iostream>
 #include <fstream>
+#include <cstring>
 
 #include <lodepng/lodepng.hpp>
 

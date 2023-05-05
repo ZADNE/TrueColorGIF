@@ -1,4 +1,4 @@
-﻿target_sources(TrueColorGIF PRIVATE
+﻿target_sources(makegif PRIVATE
     Collagist.hpp               Collagist.cpp
     Compression.hpp             Compression.cpp
     Encoder.hpp                 Encoder.cpp

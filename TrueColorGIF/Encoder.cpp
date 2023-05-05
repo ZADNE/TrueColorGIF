@@ -63,7 +63,7 @@ void encodeImage(
 ) {
     //Determine size of the local color table
     size_t tableSize =
-        std::max(std::bit_ceil<size_t>(p.colors.size() / 3ull), 2ull);
+        std::max(std::bit_ceil<size_t>(p.colors.size() / 3), (size_t)2);
     unsigned int indexBits = std::countr_zero(tableSize) - 1;
     unsigned int flags = 0b1'0'0'00'000 | indexBits;
 
@@ -97,7 +97,7 @@ void encodeImage(
     size_t bytesWritten = 0ull;
     size_t streamSize = s.size();
     while (bytesWritten < s.size()) {           //Separate the datastream into blocks
-        size_t blockSize = std::min(streamSize - bytesWritten, 255ull);
+        size_t blockSize = std::min(streamSize - bytesWritten, (size_t)255);
         writeLittle<uint8_t>(o, blockSize);     //Size of this data block
         o.write(                                //The data block
             reinterpret_cast<const char*>(&s[bytesWritten]), blockSize
